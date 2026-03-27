@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smartmove"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "langgraph>=0.2.0",
+    "langchain>=0.3.0",
+    "langchain-openai>=1.1.11",
+    "langchain-community>=0.3.0",
+    "neo4j>=5.20.0",
+    "python-dotenv>=1.0.0",
+    "streamlit>=1.36.0",
+]
+
+[tool.setuptools]
+packages = ["smartmove"]
+
+[tool.setuptools.package-data]
+smartmove = ["py.typed"]
