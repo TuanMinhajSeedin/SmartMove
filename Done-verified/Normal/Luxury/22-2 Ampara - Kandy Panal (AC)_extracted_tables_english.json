@@ -1,0 +1,185 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\NormalWay\\Luxury-20250218T141812Z-001\\Luxury\\22-2 Ampara - Kandy Panal (AC).pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Route Number",
+          "Ampara",
+          "Mahiyanganaya",
+          "Kandy"
+        ],
+        "rows": [
+          [
+            "NC-6932\n(NTC-13471)",
+            "5:35",
+            "8:05",
+            "10:35"
+          ],
+          [
+            "Route No. 01",
+            "6:40",
+            "9:10",
+            "11:40"
+          ],
+          [
+            "Route No. 02",
+            "7:40",
+            "10:10",
+            "12:40"
+          ],
+          [
+            "Route No. 03",
+            "8:30",
+            "11:00",
+            "13:30"
+          ],
+          [
+            "Route No. 04",
+            "9:30",
+            "12:00",
+            "14:30"
+          ],
+          [
+            "Route No. 05",
+            "10:30",
+            "13:00",
+            "15:30"
+          ],
+          [
+            "Route No. 06",
+            "11:30",
+            "14:00",
+            "16:30"
+          ],
+          [
+            "Route No. 07",
+            "12:30",
+            "15:00",
+            "17:30"
+          ],
+          [
+            "ND-5978\n(NTC-7030)",
+            "13:30",
+            "16:00",
+            "18:30"
+          ],
+          [
+            "Route No. 08",
+            "14:30",
+            "17:00",
+            "19:30"
+          ],
+          [
+            "Route No. 09",
+            "15:30",
+            "18:00",
+            "20:30"
+          ],
+          [
+            "Route No. 10",
+            "16:30",
+            "19:00",
+            "21:30"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Route Number",
+          "Kandy",
+          "Mahiyanganaya",
+          "Ampara"
+        ],
+        "rows": [
+          [
+            "ND-5978\n(NTC-7030)",
+            "6:30",
+            "9:00",
+            "11:30"
+          ],
+          [
+            "Route No. 07",
+            "7:30",
+            "10:00",
+            "12:30"
+          ],
+          [
+            "Route No. 08",
+            "8:30",
+            "11:00",
+            "13:30"
+          ],
+          [
+            "Route No. 09",
+            "9:30",
+            "12:00",
+            "14:30"
+          ],
+          [
+            "Route No. 10",
+            "11:35",
+            "14:05",
+            "16:35"
+          ],
+          [
+            "Route No. 01",
+            "12:30",
+            "15:00",
+            "17:30"
+          ],
+          [
+            "NC-6932\n(NTC-13471)",
+            "13:45",
+            "16:15",
+            "18:45"
+          ],
+          [
+            "Route No. 02",
+            "14:50",
+            "17:20",
+            "19:50"
+          ],
+          [
+            "Route No. 03",
+            "15:55",
+            "18:25",
+            "20:55"
+          ],
+          [
+            "Route No. 04",
+            "17:00",
+            "19:30",
+            "22:00"
+          ],
+          [
+            "Route No. 05",
+            "18:05",
+            "20:35",
+            "23:05"
+          ],
+          [
+            "Route No. 06",
+            "20:15",
+            "22:45",
+            "1:15"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "The document contains two tables. The first table shows the bus schedule from Ampara to Kandy via Mahiyanganaya. The second table shows the bus schedule from Kandy to Ampara via Mahiyanganaya. Both tables list the route number and departure times from each respective city."
+  },
+  "timestamp": "2025-10-19T11:58:28.748284",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

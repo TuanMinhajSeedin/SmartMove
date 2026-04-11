@@ -1,0 +1,173 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\NormalWay\\Semi Luxury-20250218T141750Z-001\\Semi Luxury\\458-1 Matugama - Kandy (SL).pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Route Number",
+          "Bus Number",
+          "License Plate Number",
+          "Mathugama",
+          "Horana",
+          "Kandy",
+          "Destination"
+        ],
+        "rows": [
+          [
+            "315/1-30",
+            "T12026",
+            "ND-8503",
+            "",
+            "4:00",
+            "7:30",
+            "Vakarai (13:30)"
+          ],
+          [
+            "315/1",
+            "F11574",
+            "NB-0273",
+            "",
+            "5:20",
+            "8:50",
+            ""
+          ],
+          [
+            "315/1",
+            "A11336",
+            "ND-7482",
+            "",
+            "6:00",
+            "9:30",
+            ""
+          ],
+          [
+            "285-15",
+            "A10828",
+            "ND-6365",
+            "6:00",
+            "7:00",
+            "",
+            "Anuradhapura (13:30)"
+          ],
+          [
+            "458-1",
+            "A10486",
+            "NB-4838",
+            "7:00",
+            "8:00",
+            "11:30",
+            ""
+          ],
+          [
+            "458/15/87",
+            "T12223",
+            "NA-8692",
+            "7:30",
+            "8:30",
+            "",
+            "Jaffna (19:00)"
+          ],
+          [
+            "458-1",
+            "F11882",
+            "NC-7625",
+            "14:00",
+            "15:00",
+            "18:30",
+            ""
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Route Number",
+          "Bus Number",
+          "License Plate Number",
+          "Origin",
+          "Kandy",
+          "Horana",
+          "Mathugama"
+        ],
+        "rows": [
+          [
+            "458-1",
+            "F11882",
+            "NC-7625",
+            "",
+            "6:30",
+            "10:00",
+            "11:00"
+          ],
+          [
+            "315/1-30",
+            "T12026",
+            "ND-8503",
+            "Vakarai (06:00)",
+            "12:00",
+            "3:30",
+            ""
+          ],
+          [
+            "458-1",
+            "A10486",
+            "NB-4838",
+            "",
+            "13:30",
+            "17:00",
+            "18:00"
+          ],
+          [
+            "315/1",
+            "F11574",
+            "NB-0273",
+            "",
+            "14:45",
+            "18:15",
+            ""
+          ],
+          [
+            "315/1",
+            "A11336",
+            "ND-7482",
+            "",
+            "16:00",
+            "19:30",
+            ""
+          ],
+          [
+            "458/15/87",
+            "T12223",
+            "ΝΑ-8692",
+            "Jaffna (05:00)",
+            "",
+            "15:30",
+            "16:30"
+          ],
+          [
+            "285-15",
+            "",
+            "ND-6365",
+            "Anuradhapura (14:50)",
+            "",
+            "21:20",
+            "22:20"
+          ]
+        ]
+
+      }
+
+    ],
+    "summary": "This document contains three tables. The first table lists bus departure times from Mathugama and Horana, specifying Kandy as a stop and the final destination. The second table lists bus arrival times in Kandy, Horana, and Mathugama, with their respective origins (Vakarai/Jaffna/Anuradhapura). The third table lists the route number, route, distance, travel time, and average speed for each route."
+  },
+  "timestamp": "2025-10-19T12:23:37.709275",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

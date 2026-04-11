@@ -1,0 +1,369 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\NormalWay\\Semi Luxury-20250218T141750Z-001\\Semi Luxury\\15-7 Vavuniya - Colombo (N-SL-AC).pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Run Number",
+          "Colombo",
+          "Vavuniya"
+        ],
+        "rows": [
+          [
+            "Colombo SL 01",
+            "4:20",
+            "11:20"
+          ],
+          [
+            "Colombo SL 02",
+            "5:00",
+            "12:00"
+          ],
+          [
+            "Colombo SL 03",
+            "5:30",
+            "12:30"
+          ],
+          [
+            "Colombo SL 04",
+            "6:00",
+            "13:00"
+          ],
+          [
+            "Colombo N",
+            "6:30",
+            "13:35"
+          ],
+          [
+            "Colombo SL 05",
+            "7:00",
+            "14:00"
+          ],
+          [
+            "Colombo L",
+            "7:30",
+            "14:00"
+          ],
+          [
+            "Colombo SL 06",
+            "8:00",
+            "14:50"
+          ],
+          [
+            "To Mullaitivu SL\nNTC-13107 NB-4982",
+            "8:30",
+            "15:20"
+          ],
+          [
+            "Colombo L",
+            "9:00",
+            "15:30"
+          ],
+          [
+            "Colombo SL 07",
+            "9:30",
+            "16:30"
+          ],
+          [
+            "Nandikadal SL\nNTC-11510 NA-9273",
+            "10:00",
+            "To Nandikadal"
+          ],
+          [
+            "Colombo N",
+            "10:30",
+            "17:30"
+          ],
+          [
+            "Colombo SL 08",
+            "11:00",
+            "16:35"
+          ],
+          [
+            "Colombo SL 09",
+            "11:35",
+            "18:35"
+          ],
+          [
+            "Vavuniya SL 01",
+            "12:05",
+            "19:05"
+          ],
+          [
+            "Vavuniya SL 02",
+            "12:40",
+            "19:40"
+          ],
+          [
+            "Vavuniya SL 03",
+            "13:10",
+            "20:10"
+          ],
+          [
+            "Vavuniya SL 04",
+            "13:45",
+            "20:45"
+          ],
+          [
+            "Colombo SL10",
+            "14:15",
+            "21:15"
+          ],
+          [
+            "Vavuniya N",
+            "14:50",
+            "21:50"
+          ],
+          [
+            "Vavuniya SL 05",
+            "15:25",
+            "22:25"
+          ],
+          [
+            "Vavuniya SL 06",
+            "15:55",
+            "22:55"
+          ],
+          [
+            "Vavuniya N",
+            "16:20",
+            "23:10"
+          ],
+          [
+            "Vavuniya SL 07",
+            "16:50",
+            "23:50"
+          ],
+          [
+            "Vavuniya SL 08",
+            "17:25",
+            "0:25"
+          ],
+          [
+            "Vavuniya SL 09",
+            "17:55",
+            "0:55"
+          ],
+          [
+            "Vavuniya N",
+            "18:25",
+            "1:25"
+          ],
+          [
+            "Vavuniya SL 10",
+            "19:05",
+            "2:05"
+          ],
+          [
+            "Vavuniya SL 11",
+            "20:00",
+            "3:00"
+          ],
+          [
+            "Vavuniya SL 12",
+            "21:05",
+            "4:05"
+          ],
+          [
+            "Vavuniya SL 13",
+            "22:05",
+            "5:05"
+          ],
+          [
+            "Vavuniya SL 14",
+            "23:10",
+            "6:10"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Run Number",
+          "Vavuniya",
+          "Colombo"
+        ],
+        "rows": [
+          [
+            "Vavuniya SL 01",
+            "1:30",
+            "8:30"
+          ],
+          [
+            "Vavuniya SL 02",
+            "2:30",
+            "9:30"
+          ],
+          [
+            "Vavuniya SL 03",
+            "3:30",
+            "10:30"
+          ],
+          [
+            "Vavuniya SL 04",
+            "4:20",
+            "11:20"
+          ],
+          [
+            "Vavuniya N",
+            "5:20",
+            "12:30"
+          ],
+          [
+            "Vavuniya SL 05",
+            "6:10",
+            "13:10"
+          ],
+          [
+            "Vavuniya SL 06",
+            "6:50",
+            "13:50"
+          ],
+          [
+            "Vavuniya N",
+            "7:25",
+            "14:25"
+          ],
+          [
+            "Vavuniya SL 07",
+            "8:00",
+            "15:00"
+          ],
+          [
+            "Vavuniya SL 08",
+            "8:35",
+            "15:35"
+          ],
+          [
+            "Vavuniya SL 09",
+            "9:05",
+            "16:05"
+          ],
+          [
+            "Vavuniya N",
+            "9:35",
+            "16:35"
+          ],
+          [
+            "Vavuniya SL 10",
+            "10:05",
+            "17:05"
+          ],
+          [
+            "Vavuniya SL 11",
+            "10:35",
+            "17:35"
+          ],
+          [
+            "Vavuniya SL 12",
+            "11:05",
+            "18:05"
+          ],
+          [
+            "Vavuniya SL 13",
+            "11:35",
+            "18:35"
+          ],
+          [
+            "Vavuniya SL 14",
+            "12:10",
+            "19:10"
+          ],
+          [
+            "Colombo SL 01",
+            "12:45",
+            "19:45"
+          ],
+          [
+            "Colombo SL 02",
+            "13:20",
+            "20:20"
+          ],
+          [
+            "Colombo SL 03",
+            "13:55",
+            "20:55"
+          ],
+          [
+            "Colombo SL 04",
+            "14:30",
+            "21:30"
+          ],
+          [
+            "Colombo L",
+            "15:10",
+            "21:40"
+          ],
+          [
+            "Colombo SL 05",
+            "15:50",
+            "22:50"
+          ],
+          [
+            "Colombo L",
+            "16:30",
+            "23:00"
+          ],
+          [
+            "Colombo N",
+            "17:10",
+            "0:10"
+          ],
+          [
+            "Colombo SL 06",
+            "18:00",
+            "1:00"
+          ],
+          [
+            "Colombo N",
+            "18:50",
+            "1:50"
+          ],
+          [
+            "Colombo SL 07",
+            "20:00",
+            "3:00"
+          ],
+          [
+            "Colombo SL 08",
+            "21:30",
+            "4:30"
+          ],
+          [
+            "Colombo SL 09",
+            "22:30",
+            "5:30"
+          ],
+          [
+            "From Mullaitivu SL (21:30 PM)\nNTC-13107 NB-4982",
+            "23:00",
+            "6:00"
+          ],
+          [
+            "Colombo SL10",
+            "23:20",
+            "6:20"
+          ],
+          [
+            "From Nandikadal SL (21:30 PM)\nNTC-11510 NA-9273",
+            "",
+            "7:15"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "The document contains 5 tables. The first two tables list the bus schedules from Colombo to Vavuniya and vice versa. The third table provides information on the distance, travel time, and average speed for both normal and luxury buses. The fourth and fifth tables provide information on travel times between cities."
+  },
+  "timestamp": "2025-10-19T12:15:10.820906",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

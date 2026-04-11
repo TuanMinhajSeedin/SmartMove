@@ -1,0 +1,339 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\NormalWay\\Luxury-20250218T141812Z-001\\Luxury\\06 Kurunagala - Colombo (R.N.06) AC Panal (High Way & Normal).pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Trip Number",
+          "Route Type\n(to Colombo)",
+          "Departure Time\nfrom Kurunegala"
+        ],
+        "rows": [
+          [
+            "Colombo 01",
+            "Expressway\nvia\nNormal Road",
+            "7:30"
+          ],
+          [
+            "Colombo 02",
+            "Via\nNormal Road",
+            "8:00"
+          ],
+          [
+            "Kurunegala 01",
+            "Expressway",
+            "8:30"
+          ],
+          [
+            "Kurunegala 02",
+            "Via\nNormal Road",
+            "9:00"
+          ],
+          [
+            "Kurunegala 03",
+            "Expressway",
+            "9:25"
+          ],
+          [
+            "Kurunegala 04",
+            "Via\nNormal Road",
+            "9:50"
+          ],
+          [
+            "Colombo 03",
+            "Expressway",
+            "10:15"
+          ],
+          [
+            "Colombo 04",
+            "Via\nNormal Road",
+            "10:40"
+          ],
+          [
+            "Kurunegala 05",
+            "Expressway",
+            "11:05"
+          ],
+          [
+            "Kurunegala 06",
+            "Via\nNormal Road",
+            "11:30"
+          ],
+          [
+            "Kurunegala 07",
+            "Expressway",
+            "11:55"
+          ],
+          [
+            "Kurunegala 08",
+            "Via\nNormal Road",
+            "12:20"
+          ],
+          [
+            "Kurunegala 09",
+            "Expressway",
+            "12:45"
+          ],
+          [
+            "Kurunegala 10",
+            "Via\nNormal Road",
+            "13:10"
+          ],
+          [
+            "Colombo 05",
+            "Expressway",
+            "13:35"
+          ],
+          [
+            "Colombo 06",
+            "Via\nNormal Road",
+            "14:00"
+          ],
+          [
+            "Kurunegala 11",
+            "Expressway",
+            "14:25"
+          ],
+          [
+            "Kurunegala 12",
+            "Via\nNormal Road",
+            "14:50"
+          ],
+          [
+            "Kurunegala 13",
+            "Expressway",
+            "15:15"
+          ],
+          [
+            "Kurunegala 14",
+            "Via\nNormal Road",
+            "15:40"
+          ],
+          [
+            "Kurunegala 15",
+            "Expressway",
+            "16:05"
+          ],
+          [
+            "Kurunegala 16",
+            "Via\nNormal Road",
+            "16:30"
+          ],
+          [
+            "Kurunegala 17",
+            "Expressway",
+            "17:00"
+          ],
+          [
+            "Kurunegala 18",
+            "Via\nNormal Road",
+            "17:30"
+          ],
+          [
+            "Kurunegala 19",
+            "Expressway",
+            "18:00"
+          ],
+          [
+            "Kurunegala 20",
+            "Via\nNormal Road",
+            "18:30"
+          ],
+          [
+            "Kurunegala 21",
+            "Expressway",
+            "19:00"
+          ],
+          [
+            "Kurunegala 22",
+            "Via\nNormal Road",
+            "19:30"
+          ],
+          [
+            "Kurunegala 23",
+            "Expressway",
+            "20:00"
+          ],
+          [
+            "Kurunegala 24",
+            "Via\nNormal Road",
+            "20:30"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Trip Number",
+          "Departure Time\nfrom Kurunegala",
+          "Arrival Time\nat Colombo"
+        ],
+        "rows": [
+          [
+            "Kurunegala 01",
+            "5:00",
+            "7:10"
+          ],
+          [
+            "Kurunegala 02",
+            "5:30",
+            "8:00"
+          ],
+          [
+            "Kurunegala 03",
+            "6:00",
+            "8:10"
+          ],
+          [
+            "Kurunegala 04",
+            "6:30",
+            "9:00"
+          ],
+          [
+            "Kurunegala 05",
+            "7:00",
+            "9:10"
+          ],
+          [
+            "Kurunegala 06",
+            "7:30",
+            "10:00"
+          ],
+          [
+            "Kurunegala 07",
+            "8:00",
+            "10:10"
+          ],
+          [
+            "Kurunegala 08",
+            "8:25",
+            "10:55"
+          ],
+          [
+            "Kurunegala 09",
+            "8:50",
+            "11:00"
+          ],
+          [
+            "Kurunegala 10",
+            "9:15",
+            "11:45"
+          ],
+          [
+            "Kurunegala 11",
+            "9:40",
+            "11:50"
+          ],
+          [
+            "Kurunegala 12",
+            "10:05",
+            "12:35"
+          ],
+          [
+            "Kurunegala 13",
+            "10:30",
+            "12:40"
+          ],
+          [
+            "Kurunegala 14",
+            "10:55",
+            "13:25"
+          ],
+          [
+            "Colombo 01",
+            "11:20",
+            "13:30"
+          ],
+          [
+            "Colombo 02",
+            "11:45",
+            "14:15"
+          ],
+          [
+            "Kurunegala 15",
+            "12:10",
+            "14:20"
+          ],
+          [
+            "Kurunegala 16",
+            "12:35",
+            "15:05"
+          ],
+          [
+            "Kurunegala 17",
+            "13:00",
+            "15:10"
+          ],
+          [
+            "Kurunegala 18",
+            "13:30",
+            "16:00"
+          ],
+          [
+            "Kurunegala 19",
+            "14:00",
+            "16:10"
+          ],
+          [
+            "Kurunegala 20",
+            "14:30",
+            "17:00"
+          ],
+          [
+            "Kurunegala 21",
+            "15:00",
+            "17:10"
+          ],
+          [
+            "Kurunegala 22",
+            "15:30",
+            "18:00"
+          ],
+          [
+            "Kurunegala 23",
+            "16:00",
+            "18:10"
+          ],
+          [
+            "Kurunegala 24",
+            "16:30",
+            "19:00"
+          ],
+          [
+            "Colombo 03",
+            "17:00",
+            "19:10"
+          ],
+          [
+            "Colombo 04",
+            "17:30",
+            "20:00"
+          ],
+          [
+            "Colombo 05",
+            "18:00",
+            "20:10"
+          ],
+          [
+            "Colombo 06",
+            "18:30",
+            "21:00"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains two tables showing the bus schedule. Table 1 details trips from Kurunegala towards Colombo, indicating the route type and departure times from Kurunegala. Table 2 details trips starting from Kurunegala, with departure times from Kurunegala and corresponding arrival times at Colombo."
+  },
+  "timestamp": "2025-10-21T13:55:20.347715",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

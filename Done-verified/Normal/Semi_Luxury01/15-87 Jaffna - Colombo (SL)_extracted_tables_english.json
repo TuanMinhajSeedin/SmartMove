@@ -1,0 +1,173 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\NormalWay\\Semi Luxury-20250218T141750Z-001\\Semi Luxury\\15-87 Jaffna - Colombo (SL).pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "NTC Number",
+          "Bus Number",
+          "Colombo",
+          "Kurunegala",
+          "Dambulla",
+          "Vavuniya",
+          "Jaffna"
+        ],
+        "rows": [
+          [
+            "T11963",
+            "NB-5906",
+            "7:15",
+            "9:50",
+            "11:15",
+            "14:15",
+            "17:30"
+          ],
+          [
+            "TF13233",
+            "NC-3179",
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          [
+            "TF13061",
+            "NB-1179",
+            "10:10",
+            "12:45",
+            "14:10",
+            "17:10",
+            "20:25"
+          ],
+          [
+            "T12796",
+            "NB-4057",
+            "10:10",
+            "12:45",
+            "14:10",
+            "17:10",
+            "20:25"
+          ],
+          [
+            "TF13114",
+            "NB-5004",
+            "14:30",
+            "17:05",
+            "18:30",
+            "21:30",
+            "0:45"
+          ],
+          [
+            "TF13592",
+            "NB-0276",
+            "14:30",
+            "17:05",
+            "18:30",
+            "21:30",
+            "0:45"
+          ],
+          [
+            "TF13331",
+            "NB-9729",
+            "15:35",
+            "18:10",
+            "19:35",
+            "22:35",
+            "1:50"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "NTC Number",
+          "Bus Number",
+          "Jaffna",
+          "Vavuniya",
+          "Dambulla",
+          "Kurunegala",
+          "Colombo"
+        ],
+        "rows": [
+          [
+            "T11963",
+            "NB-5906",
+            "6:15",
+            "9:30",
+            "12:30",
+            "13:55",
+            "16:30"
+          ],
+          [
+            "TF13061",
+            "NB-1179",
+            "6:15",
+            "9:30",
+            "12:30",
+            "13:55",
+            "16:30"
+          ],
+          [
+            "TF13233",
+            "NC-3179",
+            "7:30",
+            "10:45",
+            "13:45",
+            "15:10",
+            "17:45"
+          ],
+          [
+            "T12796",
+            "NB-4057",
+            "7:30",
+            "10:45",
+            "13:45",
+            "15:10",
+            "17:45"
+          ],
+          [
+            "TF13114",
+            "NB-5004",
+            "11:50",
+            "15:05",
+            "18:05",
+            "19:30",
+            "22:05"
+          ],
+          [
+            "TF13592",
+            "NB-0276",
+            "21:30",
+            "0:45",
+            "3:45",
+            "5:10",
+            "7:45"
+          ],
+          [
+            "TF13331",
+            "NB-9729",
+            "21:30",
+            "0:45",
+            "3:45",
+            "5:10",
+            "7:45"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains two tables. The first table shows the bus schedule from Colombo to Jaffna, including the NTC number, bus number, and arrival times at different cities along the route. The second table shows the bus schedule from Jaffna to Colombo, including the same information."
+  },
+  "timestamp": "2025-10-19T12:15:57.598208",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

@@ -1,0 +1,199 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\Expressway\\Matara - Panadura.pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Run Number",
+          "Matara",
+          "Panadura"
+        ],
+        "rows": [
+          [
+            "PVT - M-1",
+            "5:30",
+            "7:20"
+          ],
+          [
+            "SLTB",
+            "6:20",
+            "8:10"
+          ],
+          [
+            "PVT - M-2",
+            "7:10",
+            "9:00"
+          ],
+          [
+            "SLTB",
+            "8:00",
+            "9:50"
+          ],
+          [
+            "PVT - P 1",
+            "8:50",
+            "10:40"
+          ],
+          [
+            "ETC M-01",
+            "9:40",
+            "11:30"
+          ],
+          [
+            "PVT - P 2",
+            "10:30",
+            "12:20"
+          ],
+          [
+            "SLTB",
+            "11:30",
+            "13:20"
+          ],
+          [
+            "PVT - M-1",
+            "12:30",
+            "14:20"
+          ],
+          [
+            "SLTB",
+            "13:30",
+            "15:20"
+          ],
+          [
+            "PVT - M-2",
+            "14:30",
+            "16:20"
+          ],
+          [
+            "ETC P-01",
+            "15:30",
+            "17:20"
+          ],
+          [
+            "PVT - P 1",
+            "16:30",
+            "18:20"
+          ],
+          [
+            "SLTB",
+            "17:30",
+            "19:20"
+          ],
+          [
+            "PVT - P 2",
+            "18:30",
+            "20:20"
+          ],
+          [
+            "SLTB",
+            "19:30",
+            "21:20"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Run Number",
+          "Panadura",
+          "Matara"
+        ],
+        "rows": [
+          [
+            "PVT - P 1",
+            "5:30",
+            "7:20"
+          ],
+          [
+            "SLTB",
+            "6:30",
+            "8:20"
+          ],
+          [
+            "PVT - P 2",
+            "7:30",
+            "9:20"
+          ],
+          [
+            "SLTB",
+            "8:30",
+            "10:20"
+          ],
+          [
+            "PVT - M-1",
+            "9:30",
+            "11:20"
+          ],
+          [
+            "ETC P-01",
+            "10:30",
+            "12:20"
+          ],
+          [
+            "PVT - M-2",
+            "11:30",
+            "13:20"
+          ],
+          [
+            "SLTB",
+            "12:30",
+            "14:20"
+          ],
+          [
+            "PVT - P 1",
+            "13:20",
+            "15:10"
+          ],
+          [
+            "SLTB",
+            "14:10",
+            "16:00"
+          ],
+          [
+            "PVT - P 2",
+            "15:00",
+            "16:50"
+          ],
+          [
+            "ETC M-01",
+            "15:50",
+            "17:40"
+          ],
+          [
+            "PVT - M-1",
+            "16:40",
+            "18:30"
+          ],
+          [
+            "SLTB",
+            "17:30",
+            "19:20"
+          ],
+          [
+            "PVT - M-2",
+            "18:30",
+            "20:20"
+          ],
+          [
+            "SLTB",
+            "19:30",
+            "21:20"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains two tables showing bus schedules between Panadura and Matara. The tables list the and times for different bus services (PVT, SLTB, ETC) in both directions."
+  },
+  "timestamp": "2025-10-18T22:01:42.648666",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

@@ -1,0 +1,161 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw/Expressway/Matara - Moratuwa Campus.pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Trip Number",
+          "Matara",
+          "Piliyandala",
+          "Moratuwa"
+        ],
+        "rows": [
+          [
+            "PVT - 01",
+            "6:00",
+            "8:00",
+            "8:30"
+          ],
+          [
+            "SLTB",
+            "7:00",
+            "9:00",
+            ""
+          ],
+          [
+            "PVT - 02",
+            "8:00",
+            "10:00",
+            "10:30"
+          ],
+          [
+            "SLTB",
+            "10:00",
+            "12:00",
+            ""
+          ],
+          [
+            "SLTB",
+            "12:00",
+            "14:00",
+            ""
+          ],
+          [
+            "SLTB",
+            "13:00",
+            "15:00",
+            ""
+          ],
+          [
+            "PVT - 01",
+            "14:00",
+            "16:00",
+            "16:30"
+          ],
+          [
+            "PVT - 02",
+            "15:00",
+            "17:00",
+            "17:30"
+          ],
+          [
+            "SLTB",
+            "16:15",
+            "18:15",
+            ""
+          ],
+          [
+            "SLTB",
+            "17:00",
+            "19:00",
+            ""
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Trip Number",
+          "Moratuwa",
+          "Piliyandala",
+          "Matara"
+        ],
+        "rows": [
+          [
+            "SLTB",
+            "",
+            "6:30",
+            "8:30"
+          ],
+          [
+            "SLTB",
+            "",
+            "7:30",
+            "9:30"
+          ],
+          [
+            "PVT - 01",
+            "8:30",
+            "9:00",
+            "11:00"
+          ],
+          [
+            "SLTB",
+            "",
+            "10:00",
+            "12:00"
+          ],
+          [
+            "PVT - 02",
+            "11:30",
+            "12:00",
+            "14:00"
+          ],
+          [
+            "SLTB",
+            "",
+            "13:00",
+            "15:00"
+          ],
+          [
+            "SLTB",
+            "",
+            "14:30",
+            "16:30"
+          ],
+          [
+            "SLTB",
+            "",
+            "16:30",
+            "18:30"
+          ],
+          [
+            "PVT - 01",
+            "17:00",
+            "17:30",
+            "19:30"
+          ],
+          [
+            "PVT - 02",
+            "18:00",
+            "18:30",
+            "20:30"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains one table showing the bus schedule from Matara to Moratuwa University and vice versa. It includes the departure and arrival times for both private (PVT) and public (SLTB) buses."
+  },
+  "timestamp": "2025-10-18T22:37:08.044566",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

@@ -1,0 +1,84 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\Expressway\\Galle - Negombo, Kandy.pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Galle Arrival",
+          "Galle Departure",
+          "Kadawatha"
+        ],
+        "rows": [
+          [
+            "6.00",
+            "6.15",
+            "7.45"
+          ],
+          [
+            "6.15",
+            "6.30",
+            "8:00"
+          ],
+          [
+            "14.00",
+            "14.15",
+            "15:45"
+          ],
+          [
+            "16.15",
+            "16.30",
+            "18:00"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Negombo",
+          "Kadawatha Arrival",
+          "Kadawatha Departure",
+          "Galle"
+        ],
+        "rows": [
+          [
+            "05:30",
+            "7.30",
+            "7.45",
+            "9:15"
+          ],
+          [
+            "05:00",
+            "7.45",
+            "8.00",
+            "9:30"
+          ],
+          [
+            "16:30",
+            "18.00",
+            "18.15",
+            "19:45"
+          ],
+          [
+            "15:00",
+            "18.15",
+            "18.30",
+            "20:00"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains one table that shows the bus schedule from Galle to Mahanuwara/Migamuwa and vice versa. The table includes the arrival and departure times at the terminal and the destination."
+  },
+  "timestamp": "2025-10-18T21:59:50.189578",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

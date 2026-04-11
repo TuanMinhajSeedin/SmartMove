@@ -1,0 +1,74 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\Expressway\\Galle - Negombo, Kandy.pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Galle",
+          "Kadawatha"
+        ],
+        "rows": [
+          [
+            {"arrival_to_terminal": "6:00", "departure_from_terminal": "6:15"},
+            "7.45"
+          ],
+          [
+            {"arrival_to_terminal": "6:15", "departure_from_terminal": "6:30"},
+            "8:00"
+          ],
+          [
+            {"arrival_to_terminal": "14:00", "departure_from_terminal": "14:15"},
+            "15:45"
+          ],
+          [
+            {"arrival_to_terminal": "16:15", "departure_from_terminal": "16:30"},
+            "18:00"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Negombo",
+          "Kadawatha",
+          "Galle"
+        ],
+        "rows": [
+          [
+            "05:30",
+            {"arrival_to_terminal": "7:30", "departure_from_terminal": "7:45"},
+            "9:15"
+          ],
+          [
+            "05:00",
+            {"arrival_to_terminal": "7:45", "departure_from_terminal": "8:00"},
+            "9:30"
+          ],
+          [
+            "16:30",
+            {"arrival_to_terminal": "18:00", "departure_from_terminal": "18:15"},
+            "19:45"
+          ],
+          [
+            "15:00",
+            {"arrival_to_terminal": "18:15", "departure_from_terminal": "18:30"},
+            "20:00"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains one table that shows the bus schedule from Galle to Mahanuwara/Migamuwa and vice versa. The table includes the arrival and departure times at the terminal and the destination."
+  },
+  "timestamp": "2025-10-18T21:59:50.189578",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

@@ -1,0 +1,245 @@
+{
+  "success": true,
+  "pdf_path": "Raw\\Expressway\\Elpitiya - Colombo.pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Run Number",
+          "Elpitiya",
+          "Makumbura",
+          "Colombo"
+        ],
+        "rows": [
+          [
+            "SLTB (Elpitiya)",
+            "4:15",
+            "5:10",
+            "6:10"
+          ],
+          [
+            "NB-9788 (13765)",
+            "5:00",
+            "5:55",
+            "6:55"
+          ],
+          [
+            "Elpitiya 01",
+            "5:30",
+            "6:25",
+            "7:25"
+          ],
+          [
+            "SLTB (Elpitiya)",
+            "6:00",
+            "6:55",
+            "To Makumbura"
+          ],
+          [
+            "Elpitiya 02",
+            "6:30",
+            "7:25",
+            "8:25"
+          ],
+          [
+            "SLTB (Elpitiya)",
+            "7:00",
+            "7:55",
+            "8:55"
+          ],
+          [
+            "Elpitiya 03",
+            "7:30",
+            "8:25",
+            "9:25"
+          ],
+          [
+            "Elpitiya 04",
+            "8:30",
+            "9:25",
+            "10:25"
+          ],
+          [
+            "Elpitiya 05",
+            "9:15",
+            "10:10",
+            "11:10"
+          ],
+          [
+            "NB-9788 (13765)",
+            "10:00",
+            "10:55",
+            "11:55"
+          ],
+          [
+            "SLTB (Elpitiya)",
+            "10:45",
+            "11:40",
+            "12:40"
+          ],
+          [
+            "Elpitiya 01",
+            "11:30",
+            "12:25",
+            "13:25"
+          ],
+          [
+            "Elpitiya 02",
+            "12:30",
+            "13:25",
+            "14:25"
+          ],
+          [
+            "SLTB (Elpitiya)",
+            "13:00",
+            "13:55",
+            "14:55"
+          ],
+          [
+            "Elpitiya 03",
+            "13:30",
+            "14:25",
+            "15:25"
+          ],
+          [
+            "Elpitiya 04",
+            "14:30",
+            "15:25",
+            "16:25"
+          ],
+          [
+            "Elpitiya 05",
+            "15:30",
+            "16:25",
+            "17:25"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Run Number",
+          "Colombo",
+          "Makumbura",
+          "Elpitiya"
+        ],
+        "rows": [
+          [
+            "SLTB (Elpitiya)",
+            "7:20",
+            "8:20",
+            "9:15"
+          ],
+          [
+            "NB-9788 (13765)",
+            "7:40",
+            "8:40",
+            "9:35"
+          ],
+          [
+            "Elpitiya 01",
+            "8:40",
+            "9:40",
+            "10:35"
+          ],
+          [
+            "SLTB (Elpitiya)",
+            "9:20",
+            "10:20",
+            "11:15"
+          ],
+          [
+            "Elpitiya 02",
+            "10:00",
+            "11:00",
+            "11:55"
+          ],
+          [
+            "Elpitiya 03",
+            "10:40",
+            "11:40",
+            "12:35"
+          ],
+          [
+            "Elpitiya 04",
+            "11:30",
+            "12:30",
+            "13:25"
+          ],
+          [
+            "Elpitiya 05",
+            "12:30",
+            "13:30",
+            "14:25"
+          ],
+          [
+            "SLTB (Elpitiya)",
+            "13:20",
+            "14:20",
+            "15:15"
+          ],
+          [
+            "NB-9788 (13765)",
+            "14:00",
+            "15:00",
+            "15:55"
+          ],
+          [
+            "Elpitiya 01",
+            "14:40",
+            "15:40",
+            "16:35"
+          ],
+          [
+            "SLTB (Elpitiya)",
+            "15:20",
+            "16:20",
+            "17:15"
+          ],
+          [
+            "Elpitiya 02",
+            "16:00",
+            "17:00",
+            "17:55"
+          ],
+          [
+            "Elpitiya 03",
+            "16:40",
+            "17:40",
+            "18:35"
+          ],
+          [
+            "Elpitiya 04",
+            "17:30",
+            "18:30",
+            "19:25"
+          ],
+          [
+            "SLTB (Elpitiya) | From Makumbura",
+            "18:45",
+            "19:40",
+            null
+          ],
+          [
+            "Elpitiya 05",
+            "18:45",
+            "19:45",
+            "20:40"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains two tables showing the bus schedule between Elpitiya and Colombo."
+  },
+  "timestamp": "2025-10-19T15:46:27.560965",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

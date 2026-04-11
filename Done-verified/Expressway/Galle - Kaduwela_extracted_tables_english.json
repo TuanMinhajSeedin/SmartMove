@@ -1,0 +1,219 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\Expressway\\Galle - Kaduwela.pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Bus Running No",
+          "Galle",
+          "Kaduwela"
+        ],
+        "rows": [
+          [
+            "SLTB-01",
+            "05:30",
+            "07:10"
+          ],
+          [
+            "G1",
+            "06:15",
+            "07:55"
+          ],
+          [
+            "SLTB-02",
+            "07:00",
+            "08:40"
+          ],
+          [
+            "G2",
+            "07:45",
+            "09:25"
+          ],
+          [
+            "SLTB-03",
+            "08:30",
+            "10:10"
+          ],
+          [
+            "G3",
+            "09:15",
+            "10:55"
+          ],
+          [
+            "SLTB-D1",
+            "10:00",
+            "11:40"
+          ],
+          [
+            "K1",
+            "10:45",
+            "12:25"
+          ],
+          [
+            "SLTB-04",
+            "11:30",
+            "13:10"
+          ],
+          [
+            "G4",
+            "12:15",
+            "13:55"
+          ],
+          [
+            "SLTB-01",
+            "13:00",
+            "14:40"
+          ],
+          [
+            "G1",
+            "13:45",
+            "15:25"
+          ],
+          [
+            "SLTB-02",
+            "14:30",
+            "16:10"
+          ],
+          [
+            "G2",
+            "15:15",
+            "16:55"
+          ],
+          [
+            "SLTB-D1",
+            "16:00",
+            "17:40"
+          ],
+          [
+            "K1",
+            "16:45",
+            "18:25"
+          ],
+          [
+            "SLTB-D2",
+            "17:30",
+            "19:10"
+          ],
+          [
+            "K2",
+            "18:30",
+            "20:10"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Bus Running No",
+          "Kaduwela",
+          "Galle"
+        ],
+        "rows": [
+          [
+            "SLTB-D1",
+            "06:15",
+            "07:55"
+          ],
+          [
+            "K1",
+            "07:00",
+            "08:40"
+          ],
+          [
+            "SLTB-01",
+            "07:45",
+            "09:25"
+          ],
+          [
+            "G1",
+            "08:30",
+            "10:10"
+          ],
+          [
+            "SLTB-02",
+            "09:15",
+            "10:55"
+          ],
+          [
+            "G2",
+            "10:00",
+            "11:40"
+          ],
+          [
+            "SLTB-03",
+            "10:45",
+            "12:25"
+          ],
+          [
+            "G3",
+            "11:30",
+            "13:10"
+          ],
+          [
+            "SLTB-D1",
+            "12:15",
+            "13:55"
+          ],
+          [
+            "K1",
+            "13:00",
+            "14:40"
+          ],
+          [
+            "SLTB-D2",
+            "13:45",
+            "15:25"
+          ],
+          [
+            "K2",
+            "14:30",
+            "16:10"
+          ],
+          [
+            "SLTB-04",
+            "15:15",
+            "16:55"
+          ],
+          [
+            "G4",
+            "16:00",
+            "17:40"
+          ],
+          [
+            "SLTB-01",
+            "16:45",
+            "18:25"
+          ],
+          [
+            "G1",
+            "17:30",
+            "19:10"
+          ],
+          [
+            "SLTB-02",
+            "18:15",
+            "19:55"
+          ],
+          [
+            "G2",
+            "19:00",
+            "20:40"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains two tables showing the panel time table for Galle - Kaduwela and Kaduwela - Galle expressway bus services. Each table lists the bus running number and the corresponding departure times for each location."
+  },
+  "timestamp": "2025-10-18T21:59:28.265487",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

@@ -1,0 +1,149 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\NormalWay\\Luxury-20250218T141812Z-001\\Luxury\\87-2 Vauniya - Colombo (R.N.87-2) AC.pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "Bus Number / Permit Number",
+          "Vavuniya",
+          "Colombo"
+        ],
+        "rows": [
+          [
+            "ND-2751 (NTC-8918)",
+            "1:20",
+            "7:35"
+          ],
+          [
+            "NC-5842 (NTC-11680)",
+            "6:10",
+            "12:25"
+          ],
+          [
+            "ND-5223 (NTC-11590)",
+            "7:25",
+            "13:40"
+          ],
+          [
+            "NG-4002 (NTC-8676)",
+            "10:45",
+            "17:00"
+          ],
+          [
+            "NF-9367 (NTC-10954)",
+            "12:50",
+            "19:05"
+          ],
+          [
+            "NG-4635 (NTC-13745)",
+            "14:30",
+            "20:45"
+          ],
+          [
+            "NC-7739 (NTC-9334)",
+            "15:45",
+            "22:00"
+          ],
+          [
+            "C- X01",
+            "16:35",
+            "22:50"
+          ],
+          [
+            "C- X02",
+            "19:00",
+            "1:15"
+          ],
+          [
+            "NC-7992 (NTC-8811)",
+            "20:35",
+            "2:50"
+          ],
+          [
+            "NG-3232 (NTC-13746)",
+            "23:30",
+            "5:45"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "Bus Number / Permit Number",
+          "Colombo",
+          "Vavuniya"
+        ],
+        "rows": [
+          [
+            "NF-9367 (NTC-10954)",
+            "1:00",
+            "7:15"
+          ],
+          [
+            "NC-7739 (NTC-9334)",
+            "3:40",
+            "9:55"
+          ],
+          [
+            "C- X01",
+            "4:45",
+            "11:00"
+          ],
+          [
+            "C- X02",
+            "7:15",
+            "13:30"
+          ],
+          [
+            "NC-7992 (NTC-8811)",
+            "9:05",
+            "15:20"
+          ],
+          [
+            "NG-3232 (NTC-13746)",
+            "11:20",
+            "17:35"
+          ],
+          [
+            "ND-2751 (NTC-8918)",
+            "12:20",
+            "18:35"
+          ],
+          [
+            "NC-5842 (NTC-11680)",
+            "17:00",
+            "23:15"
+          ],
+          [
+            "ND-5223 (NTC-11590)",
+            "17:40",
+            "23:55"
+          ],
+          [
+            "NG-4635 (NTC-13745)",
+            "21:45",
+            "4:00"
+          ],
+          [
+            "NG-4002 (NTC-8676)",
+            "23:00",
+            "5:15"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains one table listing bus routes, departure times from Vauniya, and arrival times in Colombo. The table includes bus numbers and associated codes."
+  },
+  "timestamp": "2025-10-19T12:45:41.314032",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

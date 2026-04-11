@@ -1,0 +1,173 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\NormalWay\\Semi Luxury-20250218T141750Z-001\\Semi Luxury\\87 Jaffna - Colombo (R.N.87) SL-N.pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": null,
+        "headers": [
+          "NTC Number",
+          "Bus Number",
+          "Colombo",
+          "Puttalam",
+          "Anuradhapura",
+          "Vavuniya",
+          "Jaffna"
+        ],
+        "rows": [
+          [
+            "12893",
+            "NC-9825",
+            "0:00",
+            "3:15",
+            "5:15",
+            "6:30",
+            "9:40"
+          ],
+          [
+            "13092",
+            "ND-6642",
+            "3:10",
+            "6:25",
+            "8:25",
+            "9:40",
+            "12:50"
+          ],
+          [
+            "11965",
+            "NB-8502",
+            "5:00",
+            "8:15",
+            "10:15",
+            "11:30",
+            "14:40"
+          ],
+          [
+            "12161",
+            "NC-3193",
+            "6:10",
+            "9:25",
+            "11:25",
+            "12:40",
+            "15:50"
+          ],
+          [
+            "11878",
+            "ND-1962",
+            "18:30",
+            "21:45",
+            "23:45",
+            "1:00",
+            "4:10"
+          ],
+          [
+            "13621",
+            "NB-6258",
+            "20:30",
+            "23:45",
+            "1:45",
+            "3:00",
+            "6:10"
+          ],
+          [
+            "13857",
+            "NC-3192",
+            "21:40",
+            "0:55",
+            "2:55",
+            "4:10",
+            "7:20"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": null,
+        "headers": [
+          "NTC Number",
+          "Bus Number",
+          "Jaffna",
+          "Vavuniya",
+          "Anuradhapura",
+          "Puttalam",
+          "Colombo"
+        ],
+        "rows": [
+          [
+            "11965",
+            "NB-8502",
+            "9:30",
+            "12:40",
+            "13:55",
+            "15:55",
+            "19:10"
+          ],
+          [
+            "13092",
+            "ND-6642",
+            "10:30",
+            "13:40",
+            "14:55",
+            "16:55",
+            "20:10"
+          ],
+          [
+            "12161",
+            "NC-3193",
+            "12:15",
+            "15:25",
+            "16:40",
+            "18:40",
+            "21:55"
+          ],
+          [
+            "11878",
+            "ND-1962",
+            "19:30",
+            "22:40",
+            "23:55",
+            "1:55",
+            "5:10"
+          ],
+          [
+            "12893",
+            "NC-9825",
+            "20:40",
+            "23:50",
+            "1:05",
+            "3:05",
+            "6:20"
+          ],
+          [
+            "13857",
+            "NC-3192",
+            "21:00",
+            "0:10",
+            "1:25",
+            "3:25",
+            "6:40"
+          ],
+          [
+            "13621",
+            "NB-6258",
+            "21:45",
+            "0:55",
+            "2:10",
+            "4:10",
+            "7:25"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains two tables. The first table lists bus routes from Colombo to Jaffna, including the NTC number, bus number, and arrival times at various cities along the route. The second table lists bus routes from Jaffna to Colombo, including the NTC number, bus number, and arrival times at various cities along the route."
+  },
+  "timestamp": "2025-10-19T12:31:04.394896",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

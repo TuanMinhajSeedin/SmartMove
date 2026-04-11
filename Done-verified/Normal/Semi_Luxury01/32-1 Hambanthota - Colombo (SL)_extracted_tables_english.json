@@ -1,0 +1,205 @@
+{
+  "success": true,
+  "pdf_path": "F:\\MSC\\MSC research from 08-03-2025\\New - 2025-08-11\\ntc_time_schedule\\Raw\\NormalWay\\Semi Luxury-20250218T141750Z-001\\Semi Luxury\\32-1 Hambanthota - Colombo (SL).pdf",
+  "extracted_data": {
+    "tables": [
+      {
+        "table_number": 1,
+        "title": "Colombo Departure",
+        "headers": [
+          "Service Type",
+          "Colombo",
+          "Galle",
+          "Matara",
+          "Tangalle",
+          "Hambantota"
+        ],
+        "rows": [
+          [
+            "Normal",
+            "5:30",
+            "9:00",
+            "10:15",
+            "11:15",
+            "12:30"
+          ],
+          [
+            "Normal",
+            "11:00",
+            "14:30",
+            "15:45",
+            "16:45",
+            "18:00"
+          ],
+          [
+            "Semi-Luxury",
+            "11:15",
+            "14:45",
+            "16:00",
+            "17:00",
+            "18:15"
+          ],
+          [
+            "Semi-Luxury",
+            "12:00",
+            "15:30",
+            "16:45",
+            "17:45",
+            "19:00"
+          ],
+          [
+            "Semi-Luxury",
+            "13:00",
+            "16:30",
+            "17:45",
+            "18:45",
+            "20:00"
+          ],
+          [
+            "Semi-Luxury",
+            "14:00",
+            "17:30",
+            "18:45",
+            "19:45",
+            "21:00"
+          ],
+          [
+            "Normal",
+            "15:00",
+            "18:30",
+            "19:45",
+            "20:45",
+            "22:00"
+          ],
+          [
+            "Semi-Luxury",
+            "15:15",
+            "18:45",
+            "20:00",
+            "21:00",
+            "22:15"
+          ],
+          [
+            "Semi-Luxury",
+            "16:30",
+            "20:00",
+            "21:15",
+            "22:15",
+            "23:30"
+          ],
+          [
+            "Normal",
+            "17:30",
+            "21:00",
+            "22:15",
+            "23:15",
+            "0:30"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      },
+      {
+        "table_number": 2,
+        "title": "Hambantota Departure",
+        "headers": [
+          "Service Type",
+          "Hambantota",
+          "Tangalle",
+          "Matara",
+          "Galle",
+          "Colombo"
+        ],
+        "rows": [
+          [
+            "Semi-Luxury",
+            "0:00",
+            "1:15",
+            "2:15",
+            "3:30",
+            "7:00"
+          ],
+          [
+            "Normal",
+            "0:30",
+            "1:45",
+            "2:45",
+            "4:00",
+            "7:30"
+          ],
+          [
+            "Semi-Luxury",
+            "1:10",
+            "2:25",
+            "3:25",
+            "4:40",
+            "8:10"
+          ],
+          [
+            "Semi-Luxury",
+            "1:40",
+            "2:55",
+            "3:55",
+            "5:10",
+            "8:40"
+          ],
+          [
+            "Semi-Luxury",
+            "2:15",
+            "3:30",
+            "4:30",
+            "5:45",
+            "9:15"
+          ],
+          [
+            "Normal",
+            "2:45",
+            "4:00",
+            "5:00",
+            "6:15",
+            "9:45"
+          ],
+          [
+            "Semi-Luxury",
+            "3:15",
+            "4:30",
+            "5:30",
+            "6:45",
+            "10:15"
+          ],
+          [
+            "Normal",
+            "6:50",
+            "8:05",
+            "9:05",
+            "10:20",
+            "13:50"
+          ],
+          [
+            "Normal",
+            "8:20",
+            "9:35",
+            "10:35",
+            "11:50",
+            "15:20"
+          ],
+          [
+            "Semi-Luxury",
+            "23:30",
+            "0:45",
+            "1:45",
+            "3:00",
+            "6:30"
+          ]
+        ],
+        "page_number": 1,
+        "notes": null
+      }
+    ],
+    "summary": "This document contains three tables. The first table shows the bus schedule from Colombo, listing the arrival times at different cities. The second table shows the bus schedule from Hambantota, listing the arrival times at different cities. The third table shows the number of private and public buses and their percentage."
+  },
+  "timestamp": "2025-10-19T12:21:05.111642",
+  "model_used": "gemini-2.0-flash-exp",
+  "translated": true,
+  "translation_method": "gemini-2.5-flash"
+}

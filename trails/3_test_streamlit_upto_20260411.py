@@ -154,7 +154,6 @@ def _invoke_initial(user_text: str):
         "date": None,
         "transport_type": None,
         "fare": None,
-        "extracted_data": None,
         "missing_fields": None,
         "cypher_query": None,
         "result": None,
@@ -303,18 +302,25 @@ def main():
                 "origin": _t(lang, "Origin"),
                 "destination": _t(lang, "Destination"),
                 "departure_time": _t(lang, "Departure time"),
+                "fare": _t(lang, "Fare"),
             }
-            for f in missing_fields:
-                if f in label_map:
-                    _render_follow_up_field(f, label_map[f], input_mode)
+            core_fields = [f for f in missing_fields if f != "fare"]
+            fare_missing = "fare" in missing_fields
+
+            for f in core_fields:
+                _render_follow_up_field(f, label_map.get(f, f), input_mode)
+
+            fare_specify = False
+            if fare_missing:
+                fare_specify = st.toggle(_t(lang, "fare_toggle"), key="followup_fare_toggle")
+                if fare_specify:
+                    _render_follow_up_field("fare", label_map["fare"], input_mode)
 
             submitted = st.form_submit_button("Submit")
             if submitted:
                 cleaned: dict[str, str] = {}
                 ok = True
-                for f in missing_fields:
-                    if f not in label_map:
-                        continue
+                for f in core_fields:
                     v = _collect_follow_up_value(f, input_mode)
                     if not v:
                         ok = False
@@ -322,6 +328,16 @@ def main():
                     cleaned[f] = v
                 if not ok:
                     st.warning(_t(lang, "follow_up_prefix"))
+                elif fare_missing:
+                    if fare_specify:
+                        fv = _collect_follow_up_value("fare", input_mode)
+                        if not fv:
+                            ok = False
+                            st.warning(_t(lang, "fare_toggle_need_value"))
+                        else:
+                            cleaned["fare"] = fv
+                    else:
+                        cleaned["fare"] = "any"
                 if ok:
                     st.session_state.history.append(("assistant", question))
                     st.session_state.history.append(("user", str(cleaned)))
