@@ -41,6 +41,13 @@ class SmartMoveState(TypedDict, total=False):
     missing_fields: list[str] | None
 
     cypher_query: str | None
+    cypher_query_schedule: str | None
+    cypher_query_fare: str | None
+    cypher_query_fare_reverse: str | None
     result: str | None
+    result_schedule: str | None
+    result_fare: str | None
+    result_source: str | None
+    fare_reversed: bool | None
     response: str | None
     follow_up_question: str | None

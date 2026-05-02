@@ -237,61 +237,82 @@ def _strip_cypher_fence(content: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def generate_cypher_for_transport(state: SmartMoveState) -> str:
-    """Build a Cypher query directly from the state without calling the LLM.
+def _build_fare_only_cypher(state: SmartMoveState) -> str:
+    """Standalone Fare-only query. Reusable as a fallback for "both" shape."""
+    origin = _title_case_place(state.get("origin")) or "Unknown"
+    destination = _title_case_place(state.get("destination")) or "Unknown"
+    fare_intent = _parse_fare_intent(state.get("fare"))
+    fi = fare_intent if fare_intent["mode"] != "skip" else {"mode": "any"}
 
-    Shape-aware:
-      - "fare_only"     -> select directly from (from)-[f:Fare]->(to). No Schedule join,
-                           no time filters, always ORDER BY f.fare ASC.
-      - "schedule_only" -> select directly from (from)-[s:Schedule]->(to). No Fare join.
-      - "both"          -> combined Schedule + Fare query (existing behaviour).
+    lines: list[str] = [
+        f'MATCH (from:Place {{name: "{origin}"}})-[f:Fare]->(to:Place {{name: "{destination}"}})',
+    ]
+    if fi["mode"] == "budget":
+        lines.append(f"WHERE f.fare <= {fi['max']}")
+    lines.append(
+        "RETURN from.name AS origin, to.name AS destination, f.fare AS fare"
+    )
+    lines.append("ORDER BY f.fare ASC")
+    lines.append("LIMIT 5")
+    return "\n".join(lines)
+
+
+def _build_fare_only_cypher_reversed(state: SmartMoveState) -> str | None:
+    """Fare-only query with origin and destination swapped.
+
+    Sri Lankan transport fares are typically symmetric — the same value is
+    stored for one direction only. So if the user asks "B -> A" and the graph
+    only has the "A -> B" fare edge, this query lets us still answer.
     """
+    origin = state.get("origin")
+    destination = state.get("destination")
+    if not origin or not destination:
+        return None
+    swapped: SmartMoveState = {
+        **state,
+        "origin": destination,
+        "destination": origin,
+    }
+    return _build_fare_only_cypher(swapped)
+
+
+def _build_schedule_only_cypher(state: SmartMoveState) -> str:
+    """Standalone Schedule-only query. Reusable as a fallback for "both" shape."""
+    origin = _title_case_place(state.get("origin")) or "Unknown"
+    destination = _title_case_place(state.get("destination")) or "Unknown"
+    transport = (state.get("transport_type") or "").strip().lower()
+    op, time_24 = _parse_departure_constraint(state.get("departure_time"))
+
+    lines: list[str] = [
+        f'MATCH (from:Place {{name: "{origin}"}})-[s:Schedule]->(to:Place {{name: "{destination}"}})',
+    ]
+    where_parts: list[str] = []
+    if op and time_24:
+        where_parts.append(f's.departure {op} "{time_24}"')
+    if transport:
+        where_parts.append(
+            f"(toLower(coalesce(s.transport_type, s.service_type, '')) CONTAINS '{transport}')"
+        )
+    if where_parts:
+        lines.append("WHERE " + " AND ".join(where_parts))
+    lines.append(
+        "RETURN from.name AS origin, to.name AS destination, "
+        "s.departure AS departure_time, s.arrival AS arrival_time, "
+        "s.route_type AS route_type, s.service_type AS service_type"
+    )
+    lines.append("ORDER BY s.departure")
+    lines.append("LIMIT 5")
+    return "\n".join(lines)
+
+
+def _build_combined_cypher(state: SmartMoveState) -> str:
+    """Combined Schedule + Fare query (the "both" shape)."""
     origin = _title_case_place(state.get("origin")) or "Unknown"
     destination = _title_case_place(state.get("destination")) or "Unknown"
     transport = (state.get("transport_type") or "").strip().lower()
     op, time_24 = _parse_departure_constraint(state.get("departure_time"))
     fare_intent = _parse_fare_intent(state.get("fare"))
-    shape = classify_query_shape(state)
 
-    if shape == "fare_only":
-        # User explicitly asked about prices — even if `fare == "no"` got merged
-        # in earlier, treat it as a price lookup so we return f.fare values.
-        fi = fare_intent if fare_intent["mode"] != "skip" else {"mode": "any"}
-        lines: list[str] = [
-            f'MATCH (from:Place {{name: "{origin}"}})-[f:Fare]->(to:Place {{name: "{destination}"}})',
-        ]
-        if fi["mode"] == "budget":
-            lines.append(f"WHERE f.fare <= {fi['max']}")
-        lines.append(
-            "RETURN from.name AS origin, to.name AS destination, f.fare AS fare"
-        )
-        lines.append("ORDER BY f.fare ASC")
-        lines.append("LIMIT 5")
-        return "\n".join(lines)
-
-    if shape == "schedule_only":
-        lines = [
-            f'MATCH (from:Place {{name: "{origin}"}})-[s:Schedule]->(to:Place {{name: "{destination}"}})',
-        ]
-        where_parts: list[str] = []
-        if op and time_24:
-            where_parts.append(f's.departure {op} "{time_24}"')
-        if transport:
-            where_parts.append(
-                f"(toLower(coalesce(s.transport_type, s.service_type, '')) CONTAINS '{transport}')"
-            )
-        if where_parts:
-            lines.append("WHERE " + " AND ".join(where_parts))
-        lines.append(
-            "RETURN from.name AS origin, to.name AS destination, "
-            "s.departure AS departure_time, s.arrival AS arrival_time, "
-            "s.route_type AS route_type, s.service_type AS service_type"
-        )
-        lines.append("ORDER BY s.departure")
-        lines.append("LIMIT 5")
-        return "\n".join(lines)
-
-    # ---- shape == "both" ----
     lines = [
         f'MATCH (from:Place {{name: "{origin}"}})-[s:Schedule]->(to:Place {{name: "{destination}"}})',
     ]
@@ -311,7 +332,6 @@ def generate_cypher_for_transport(state: SmartMoveState) -> str:
         "s.departure AS departure_time",
         "s.arrival AS arrival_time",
     ]
-
     if fare_intent["mode"] != "skip":
         lines.append("MATCH (from)-[f:Fare]->(to)")
         if fare_intent["mode"] == "budget":
@@ -329,6 +349,51 @@ def generate_cypher_for_transport(state: SmartMoveState) -> str:
     lines.append("RETURN " + ", ".join(return_cols))
     lines.append("LIMIT 5")
     return "\n".join(lines)
+
+
+def generate_cypher_for_transport(state: SmartMoveState) -> str:
+    """Deterministic Cypher generator (no LLM). Routes by shape."""
+    shape = classify_query_shape(state)
+    if shape == "fare_only":
+        return _build_fare_only_cypher(state)
+    if shape == "schedule_only":
+        return _build_schedule_only_cypher(state)
+    return _build_combined_cypher(state)
+
+
+def generate_cypher_bundle(state: SmartMoveState) -> dict[str, str | None]:
+    """Generate every Cypher query the executor might need for this turn.
+
+    Returned keys:
+      - `combined`     -> primary query (combined Schedule+Fare for "both",
+                          or the single-edge query for fare_only/schedule_only)
+      - `schedule`     -> Schedule-only fallback (only for shape == "both")
+      - `fare`         -> Fare-only fallback (only for shape == "both")
+      - `fare_reverse` -> Fare-only with origin/destination swapped, used as a
+                          last-resort retry for any shape that involves fares
+                          (since SL fares are typically symmetric)
+    """
+    shape = classify_query_shape(state)
+    if shape == "fare_only":
+        return {
+            "combined": _build_fare_only_cypher(state),
+            "schedule": None,
+            "fare": None,
+            "fare_reverse": _build_fare_only_cypher_reversed(state),
+        }
+    if shape == "schedule_only":
+        return {
+            "combined": _build_schedule_only_cypher(state),
+            "schedule": None,
+            "fare": None,
+            "fare_reverse": None,
+        }
+    return {
+        "combined": _build_combined_cypher(state),
+        "schedule": _build_schedule_only_cypher(state),
+        "fare": _build_fare_only_cypher(state),
+        "fare_reverse": _build_fare_only_cypher_reversed(state),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -463,16 +528,22 @@ LIMIT 5
 """
 
 
-def cypher_generation_agent(state: SmartMoveState) -> SmartMoveState:
-    """LLM-generated Cypher tailored to the (:Place)-[:Schedule]->(:Place) graph."""
+def _llm_cypher_for_shape(state: SmartMoveState, shape: str) -> str:
+    """Ask the LLM for a single-shape Cypher query, falling back to the deterministic builder."""
     op, time_24 = _parse_departure_constraint(state.get("departure_time"))
     fare_intent = _parse_fare_intent(state.get("fare"))
-    shape = classify_query_shape(state)
-
-    # When the user only asked about fares, the LLM-extracted departure_time is
-    # almost certainly hallucinated — drop it before sending to the LLM.
     if shape == "fare_only":
         op, time_24 = None, None
+
+    if shape == "fare_only":
+        deterministic = _build_fare_only_cypher(state)
+    elif shape == "schedule_only":
+        deterministic = _build_schedule_only_cypher(state)
+    else:
+        deterministic = _build_combined_cypher(state)
+
+    if not os.getenv("OPENAI_API_KEY"):
+        return deterministic
 
     inputs: dict[str, Any] = {
         "origin": _title_case_place(state.get("origin")) or None,
@@ -484,9 +555,6 @@ def cypher_generation_agent(state: SmartMoveState) -> SmartMoveState:
         "fare_intent": fare_intent,
         "query_shape": shape,
     }
-
-    if not os.getenv("OPENAI_API_KEY"):
-        return {**state, "cypher_query": generate_cypher_for_transport(state)}
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -500,11 +568,44 @@ def cypher_generation_agent(state: SmartMoveState) -> SmartMoveState:
         ).content
         cypher = _strip_cypher_fence(response)
         if not cypher or "MATCH" not in cypher.upper():
-            cypher = generate_cypher_for_transport(state)
+            cypher = deterministic
     except Exception:
-        cypher = generate_cypher_for_transport(state)
+        cypher = deterministic
+    return cypher
 
-    return {**state, "cypher_query": cypher}
+
+def cypher_generation_agent(state: SmartMoveState) -> SmartMoveState:
+    """Build the primary Cypher plus, for combined queries, two single-edge fallbacks.
+
+    Output keys:
+      - `cypher_query`           -> the primary query (combined when shape == "both")
+      - `cypher_query_schedule`  -> Schedule-only fallback (None for non-"both")
+      - `cypher_query_fare`      -> Fare-only fallback (None for non-"both")
+    """
+    shape = classify_query_shape(state)
+
+    primary = _llm_cypher_for_shape(state, shape)
+    schedule_q: str | None = None
+    fare_q: str | None = None
+    fare_reverse_q: str | None = None
+    if shape == "both":
+        # Build the two single-edge fallbacks deterministically — they are
+        # short, unambiguous, and don't need an LLM round-trip. We still want
+        # the LLM-quality combined query as the primary attempt.
+        schedule_q = _build_schedule_only_cypher(state)
+        fare_q = _build_fare_only_cypher(state)
+        fare_reverse_q = _build_fare_only_cypher_reversed(state)
+    elif shape == "fare_only":
+        # Same direction as primary, but with origin/destination swapped.
+        fare_reverse_q = _build_fare_only_cypher_reversed(state)
+
+    return {
+        **state,
+        "cypher_query": primary,
+        "cypher_query_schedule": schedule_q,
+        "cypher_query_fare": fare_q,
+        "cypher_query_fare_reverse": fare_reverse_q,
+    }
 
 
 # Backwards-compatible alias

@@ -251,8 +251,122 @@ def cypher_generator_node(state: SmartMoveState) -> SmartMoveState:
     return cypher_generation_agent(state)
 
 
+_NEO4J_ERROR_PREFIXES = ("Neo4j query error", "Neo4j not configured", "No Cypher query")
+
+
+def _is_neo4j_error(raw: str | None) -> bool:
+    if not raw:
+        return False
+    return str(raw).strip().startswith(_NEO4J_ERROR_PREFIXES)
+
+
+def _looks_empty(raw: str | None) -> bool:
+    """JSON `[]` (or missing payload) is "empty". Errors aren't empty."""
+    if raw is None:
+        return True
+    s = str(raw).strip()
+    if not s or s == "[]":
+        return True
+    if _is_neo4j_error(s):
+        return False
+    try:
+        data = json.loads(s)
+        return isinstance(data, list) and len(data) == 0
+    except Exception:
+        return False
+
+
+def _is_usable(raw: str | None) -> bool:
+    """A result is "usable" when it parses to a non-empty list (no errors)."""
+    if raw is None:
+        return False
+    if _is_neo4j_error(raw):
+        return False
+    if _looks_empty(raw):
+        return False
+    return True
+
+
 def neo4j_query_node(state: SmartMoveState) -> SmartMoveState:
-    return {**state, "result": execute_neo4j_query(state.get("cypher_query") or "")}
+    """Run the primary Cypher and cascade through every fallback we have whenever
+    the primary is *unusable* — i.e. empty OR a transient Neo4j error like
+    "Failed to obtain connection towards 'WRITE' server.". Even if the primary
+    errored, the schedule / fare / fare-reverse queries may still succeed on a
+    different driver session, so we give them a chance.
+
+    Cascade outcomes (`result_source`):
+      - "combined"      -> primary OR a fare-reverse retry returned rows.
+      - "split"         -> "both" shape, primary unusable, schedule+fare run separately.
+                           At least one of schedule/fare is usable.
+      - "primary_error" -> nothing usable came back. We surface the most
+                           informative error string we received.
+
+    `fare_reversed` is True when the executor substituted the reversed fare
+    query for the forward one.
+    """
+    primary_q = state.get("cypher_query") or ""
+    schedule_q = state.get("cypher_query_schedule") or ""
+    fare_q = state.get("cypher_query_fare") or ""
+    fare_reverse_q = state.get("cypher_query_fare_reverse") or ""
+
+    primary_result = execute_neo4j_query(primary_q)
+    out: dict[str, Any] = {
+        **state,
+        "result": primary_result,
+        "result_schedule": None,
+        "result_fare": None,
+        "fare_reversed": False,
+    }
+
+    if _is_usable(primary_result):
+        out["result_source"] = "combined"
+        return out
+
+    has_combined_fallback = bool(schedule_q or fare_q)
+
+    # ---- "both" shape: run schedule + fare separately, with fare-reverse retry ----
+    if has_combined_fallback:
+        sched_res = execute_neo4j_query(schedule_q) if schedule_q else None
+        fare_res = execute_neo4j_query(fare_q) if fare_q else None
+        if not _is_usable(fare_res) and fare_reverse_q:
+            rev = execute_neo4j_query(fare_reverse_q)
+            if _is_usable(rev):
+                fare_res = rev
+                out["fare_reversed"] = True
+        out["result_schedule"] = sched_res
+        out["result_fare"] = fare_res
+
+        if _is_usable(sched_res) or _is_usable(fare_res):
+            out["result_source"] = "split"
+        else:
+            # Surface the most informative error we have (primary -> schedule -> fare).
+            for cand in (primary_result, sched_res, fare_res):
+                if _is_neo4j_error(cand):
+                    out["result"] = cand
+                    break
+            out["result_source"] = "primary_error"
+        return out
+
+    # ---- pure fare-only shape: try the reversed fare ----
+    if fare_reverse_q:
+        rev = execute_neo4j_query(fare_reverse_q)
+        if _is_usable(rev):
+            out["result"] = rev
+            out["fare_reversed"] = True
+            out["result_source"] = "combined"
+            return out
+        if _is_neo4j_error(rev) and not _is_neo4j_error(primary_result):
+            out["result"] = rev
+        out["result_source"] = (
+            "primary_error" if _is_neo4j_error(out["result"]) else "combined"
+        )
+        return out
+
+    # No fallbacks available.
+    out["result_source"] = (
+        "primary_error" if _is_neo4j_error(primary_result) else "combined"
+    )
+    return out
 
 
 _RESPONSE_FORMATTER_SYSTEM = """You are SmartMove's Response Formatter Agent operating in RAG mode.
@@ -306,6 +420,35 @@ FARE PREFERENCE — fare_intent.mode = `{fare_mode}`:
 EMPTY ROWS
 - Apologise briefly and suggest ONE concrete tweak (a different time,
   transport, or fare preference). Do NOT invent rows.
+
+SPLIT CONTEXT (`context.source == "split"`)
+- This means we couldn't find a SINGLE service that has BOTH a matching
+  schedule AND a fare record, so we ran the schedule-only and fare-only
+  queries separately. `context.schedule_rows` and `context.fare_rows` carry
+  those two result sets.
+- Open with one short sentence explaining that no combined record was found
+  but you have schedules and fares separately (in the user's language).
+- Present TWO labelled sections with markdown headings:
+    "**Schedules**" / "**ගමන් වේලාවන්**" / "**அட்டவணைகள்**"
+    "**Fares**" / "**ගාස්තු**" / "**கட்டணங்கள்**"
+- Each section uses the BROWSE shape rules (numbered list, deduped, concise).
+- If one of the two lists is empty, say so briefly in that section instead of
+  inventing rows.
+- Close with ONE short tip suggesting the user can pick a schedule and ask
+  about its fare specifically.
+
+REVERSE-DIRECTION FARE (`context.fare_reversed == true`)
+- Fares in our graph are typically stored in only one direction. When the
+  user asked "B -> A" but only "A -> B" had fare data, the fare values you
+  see were retrieved from the reverse direction. They are still correct.
+- Continue presenting the user's requested direction (origin -> destination)
+  in the answer text. Optionally add ONE short parenthetical note in the
+  user's language, e.g.
+    EN: "(fares are typically the same in either direction)"
+    SI: "(ගාස්තු සාමාන්‍යයෙන් දෙපැත්තටම සමාන වේ)"
+    TA: "(கட்டணம் இரு திசையிலும் பெரும்பாலும் ஒன்றாகவே இருக்கும்)"
+- Do NOT lead with the note, do NOT apologise, and do NOT repeat the note
+  more than once.
 
 RETRIEVAL ERROR (`context.error` not null)
 - Apologise briefly and explain the issue in plain language. Do NOT show
@@ -435,7 +578,14 @@ def _build_preferences(state: SmartMoveState) -> dict[str, Any]:
 
 
 def response_formatter_node(state: SmartMoveState) -> SmartMoveState:
-    """RAG-style synthesis: rows are context, the user's query is the question."""
+    """RAG-style synthesis: rows are context, the user's query is the question.
+
+    Honors `result_source`:
+      - "combined" / "primary_error" / unset -> use `result` (default behaviour).
+      - "split"                              -> use `result_schedule` + `result_fare`
+                                                and ask the formatter to present
+                                                them as two separate sections.
+    """
     user_query_original = (
         state.get("user_query_original") or state.get("user_query") or ""
     )
@@ -443,13 +593,32 @@ def response_formatter_node(state: SmartMoveState) -> SmartMoveState:
     raw_result = state.get("result") or ""
     lang_code = state.get("language") or "en"
     lang_name = SUPPORTED_LANGS.get(lang_code, "English")
+    result_source = state.get("result_source") or "combined"
 
     preferences = _build_preferences(state)
     fare_mode = preferences["fare_intent"].get("mode", "skip")
 
     rows, error = _parse_result_payload(raw_result)
     trimmed = _trim_rows_for_prompt(rows, max_rows=8)
-    context_block: dict[str, Any] = {"rows": trimmed, "error": error}
+
+    schedule_rows: list[dict[str, Any]] = []
+    fare_rows: list[dict[str, Any]] = []
+    if result_source == "split":
+        sched_raw = state.get("result_schedule") or ""
+        fare_raw = state.get("result_fare") or ""
+        s_rows, _ = _parse_result_payload(sched_raw)
+        f_rows, _ = _parse_result_payload(fare_raw)
+        schedule_rows = _trim_rows_for_prompt(s_rows, max_rows=8)
+        fare_rows = _trim_rows_for_prompt(f_rows, max_rows=8)
+
+    context_block: dict[str, Any] = {
+        "source": result_source,
+        "rows": trimmed,
+        "schedule_rows": schedule_rows,
+        "fare_rows": fare_rows,
+        "error": error,
+        "fare_reversed": bool(state.get("fare_reversed")),
+    }
 
     prompt = ChatPromptTemplate.from_messages(
         [("system", _RESPONSE_FORMATTER_SYSTEM), ("human", _RESPONSE_FORMATTER_USER)]
@@ -477,20 +646,44 @@ def response_formatter_node(state: SmartMoveState) -> SmartMoveState:
         except Exception:
             response = ""
 
-    response = (response or "").strip() or _fallback_response(
-        lang_code,
-        fare_mode,
-        preferences.get("origin") or state.get("origin") or "?",
-        preferences.get("destination") or state.get("destination") or "?",
-        trimmed,
-        error,
-    )
+    if not (response or "").strip():
+        if result_source == "split" and (schedule_rows or fare_rows):
+            response = _fallback_split_response(
+                lang_code,
+                fare_mode,
+                preferences.get("origin") or state.get("origin") or "?",
+                preferences.get("destination") or state.get("destination") or "?",
+                schedule_rows,
+                fare_rows,
+                fare_reversed=bool(state.get("fare_reversed")),
+            )
+        else:
+            response = _fallback_response(
+                lang_code,
+                fare_mode,
+                preferences.get("origin") or state.get("origin") or "?",
+                preferences.get("destination") or state.get("destination") or "?",
+                trimmed,
+                error,
+                fare_reversed=bool(state.get("fare_reversed")),
+            )
 
     return {
         **state,
         "response": response,
         "messages": state.get("messages", []) + [AIMessage(content=response)],
     }
+
+
+_FARE_REVERSED_NOTE = {
+    "en": "_(fares are typically the same in either direction)_",
+    "si": "_(ගාස්තු සාමාන්‍යයෙන් දෙපැත්තටම සමාන වේ)_",
+    "ta": "_(கட்டணம் இரு திசையிலும் பெரும்பாலும் ஒன்றாகவே இருக்கும்)_",
+}
+
+
+def _fare_reversed_suffix(lang_code: str) -> str:
+    return " " + _FARE_REVERSED_NOTE.get(lang_code, _FARE_REVERSED_NOTE["en"])
 
 
 def _fallback_response(
@@ -500,6 +693,7 @@ def _fallback_response(
     destination: str,
     rows: list[dict[str, Any]],
     error: str | None,
+    fare_reversed: bool = False,
 ) -> str:
     """Deterministic Markdown fallback when the LLM is unavailable or empty."""
     if error and not rows:
@@ -544,7 +738,10 @@ def _fallback_response(
                 "si": f"**{origin}** සිට **{destination}** දක්වා ගාස්තුව **LKR {row['fare']}** වේ.",
                 "ta": f"**{origin}** -> **{destination}** கட்டணம் **LKR {row['fare']}** ஆகும்.",
             }
-            return single.get(lang_code, single["en"])
+            text = single.get(lang_code, single["en"])
+            if fare_reversed:
+                text += _fare_reversed_suffix(lang_code)
+            return text
         if has_schedule:
             dep = row.get("departure_time") or row.get("departure") or "?"
             arr = row.get("arrival_time") or row.get("arrival") or "?"
@@ -599,6 +796,87 @@ def _fallback_response(
         bullets.append(line.strip())
 
     return "\n".join([intro, *bullets])
+
+
+def _format_schedule_bullets(rows: list[dict[str, Any]]) -> list[str]:
+    out: list[str] = []
+    for i, row in enumerate(rows):
+        dep = row.get("departure_time") or row.get("departure") or "?"
+        arr = row.get("arrival_time") or row.get("arrival") or "?"
+        qual_parts = [
+            str(v)
+            for v in (row.get("route_type"), row.get("service_type"), row.get("route_no"))
+            if v
+        ]
+        qualifiers = f" — {' / '.join(qual_parts)}" if qual_parts else ""
+        out.append(f"{i + 1}. **{dep} → {arr}**{qualifiers}")
+    return out
+
+
+def _format_fare_bullets(rows: list[dict[str, Any]]) -> list[str]:
+    out: list[str] = []
+    for i, row in enumerate(rows):
+        if row.get("fare") is None:
+            continue
+        tag = " _(cheapest)_" if i == 0 else ""
+        out.append(f"{i + 1}. `LKR {row['fare']}`{tag}")
+    return out
+
+
+def _fallback_split_response(
+    lang_code: str,
+    fare_mode: str,
+    origin: str,
+    destination: str,
+    schedule_rows: list[dict[str, Any]],
+    fare_rows: list[dict[str, Any]],
+    fare_reversed: bool = False,
+) -> str:
+    """Deterministic fallback for the "split" path: schedule + fare separately."""
+    intro = {
+        "en": (
+            f"I couldn't find a single service from **{origin}** to **{destination}** that has both a schedule and a fare on file. "
+            "Here's what I do have, listed separately:"
+        ),
+        "si": (
+            f"**{origin}** සිට **{destination}** දක්වා ගමන් වේලාවක් සහ ගාස්තුවක් එකම ලේඛනයක තිබෙන සේවාවක් සොයාගත නොහැකි විය. "
+            "මට ඇති දත්ත වෙන වෙනම මෙසේ දැක්වේ:"
+        ),
+        "ta": (
+            f"**{origin}** -> **{destination}** க்கு அட்டவணையும் கட்டணமும் சேர்ந்த ஒரே சேவை கிடைக்கவில்லை. "
+            "எனக்குக் கிடைத்த தகவல்களை தனித்தனியாக கீழே தருகிறேன்:"
+        ),
+    }.get(lang_code, "")
+
+    sched_heading = {"en": "**Schedules**", "si": "**ගමන් වේලාවන්**", "ta": "**அட்டவணைகள்**"}.get(
+        lang_code, "**Schedules**"
+    )
+    fare_heading = {"en": "**Fares**", "si": "**ගාස්තු**", "ta": "**கட்டணங்கள்**"}.get(
+        lang_code, "**Fares**"
+    )
+    none_msg = {
+        "en": "_No data available._",
+        "si": "_දත්ත නැත._",
+        "ta": "_தரவு இல்லை._",
+    }.get(lang_code, "_No data available._")
+    closing = {
+        "en": "Pick a schedule above and I can confirm its specific fare on a follow-up.",
+        "si": "ඉහත වේලාවක් තෝරාගෙන, එහි නිශ්චිත ගාස්තුව මට පසුව තහවුරු කළ හැක.",
+        "ta": "மேலே உள்ள ஒரு அட்டவணையை தேர்ந்தெடுங்கள், அதன் குறிப்பிட்ட கட்டணத்தை அடுத்த கேள்வியில் உறுதிப்படுத்த முடியும்.",
+    }.get(
+        lang_code,
+        "Pick a schedule above and I can confirm its specific fare on a follow-up.",
+    )
+
+    sched_lines = _format_schedule_bullets(schedule_rows) if schedule_rows else [none_msg]
+    fare_lines = _format_fare_bullets(fare_rows) if fare_rows else [none_msg]
+    if fare_reversed and fare_rows:
+        fare_heading = f"{fare_heading} {_FARE_REVERSED_NOTE.get(lang_code, _FARE_REVERSED_NOTE['en'])}"
+
+    parts = [intro, "", sched_heading, *sched_lines, "", fare_heading, *fare_lines]
+    if fare_mode != "skip":
+        parts.extend(["", closing])
+    return "\n".join(p for p in parts if p is not None)
 
 
 # ---------------------------------------------------------------------------
