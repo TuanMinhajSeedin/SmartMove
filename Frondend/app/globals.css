@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+  background: #0b1020;
+  color: #e6eaf2;
+  font-feature-settings: "ss01", "cv11";
+}
+
+body {
+  background-image:
+    radial-gradient(60% 60% at 20% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 70%),
+    radial-gradient(50% 50% at 100% 30%, rgba(99, 102, 241, 0.12) 0%, transparent 70%),
+    radial-gradient(60% 60% at 50% 100%, rgba(14, 165, 233, 0.12) 0%, transparent 70%);
+  background-attachment: fixed;
+}
+
+.glass {
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+.scroll-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.markdown-body p { margin-bottom: 0.5rem; }
+.markdown-body p:last-child { margin-bottom: 0; }
+.markdown-body ul { list-style: disc; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+.markdown-body ol { list-style: decimal; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+.markdown-body code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.05rem 0.35rem;
+  border-radius: 0.3rem;
+  font-size: 0.85em;
+}
+.markdown-body pre {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 0.5rem;
+}
+.markdown-body a { color: #93c5fd; text-decoration: underline; }
+.markdown-body strong { color: #fff; }

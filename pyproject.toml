@@ -16,6 +16,8 @@ dependencies = [
     "neo4j>=5.20.0",
     "python-dotenv>=1.0.0",
     "streamlit>=1.36.0",
+    "google-generativeai",
+    "pytesseract"
 ]
 
 [tool.setuptools]

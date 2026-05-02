@@ -10,12 +10,10 @@ from __future__ import annotations
 import json
 import os
 import re
-from pathlib import Path
 from typing import Any, Literal
 from typing_extensions import Annotated, TypedDict
 
 from dotenv import load_dotenv
-from neo4j import GraphDatabase
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
@@ -24,8 +22,6 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.types import Command, interrupt
 
-# Repo-root .env so NEO4J_* / OPENAI_* load when running from `trails/` or elsewhere
-load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 load_dotenv()
 
 OPENAI_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
@@ -516,11 +512,9 @@ def _coerce_extracted_value(field: str, v: Any) -> str | None:
     if field == "departure_time":
         return normalize_datetime(s) or s.lower()
     if field == "fare":
-        sl = s.lower().strip()
+        sl = s.lower()
         if sl in ("yes", "true", "1"):
             return "yes"
-        if sl in ("no", "false", "0", "none", "skip", "not interested", "no thanks"):
-            return "no"
         normalized = extract_fare_from_query(s)
         if normalized:
             return normalized
@@ -610,12 +604,7 @@ def merge_state_node(state: SmartMoveState) -> SmartMoveState:
 
 
 def validate_mandatory_fields(state: SmartMoveState) -> list[str]:
-    """Origin, destination, departure_time, and fare are required before continuing.
-
-    `fare` must always be set: a specific preference (e.g. "cheapest", "max LKR 2000",
-    "yes", "include_prices") or the literal string "no" when the user is not
-    interested in fare information.
-    """
+    """Origin, destination, and departure_time are required before continuing."""
     missing: list[str] = []
     if not state.get("origin"):
         missing.append("origin")
@@ -623,349 +612,31 @@ def validate_mandatory_fields(state: SmartMoveState) -> list[str]:
         missing.append("destination")
     if not state.get("departure_time"):
         missing.append("departure_time")
-    if not state.get("fare"):
-        missing.append("fare")
     return missing
 
 
-def _title_case_place(value: str | None) -> str:
-    """Normalize a place name to the Title Case form stored in Neo4j (e.g. "Colombo")."""
-    if not value:
-        return ""
-    cleaned = re.sub(r"\s+", " ", value.strip())
-    if not cleaned:
-        return ""
-    return " ".join(part[:1].upper() + part[1:].lower() for part in cleaned.split(" "))
-
-
-def _parse_clock_to_24h(text: str) -> str | None:
-    """Parse a clock token (8pm, 8:30 am, 20:00, 8) into HH:MM 24-hour, or None."""
-    if not text:
-        return None
-    t = text.strip().lower().replace(".", ":")
-
-    m = re.match(r"^(\d{1,2})(?::(\d{1,2}))?\s*(am|pm|a\.m\.|p\.m\.)$", t)
-    if m:
-        h = int(m.group(1))
-        mn = int(m.group(2) or 0)
-        ap = m.group(3).replace(".", "")
-        if ap.startswith("p") and h < 12:
-            h += 12
-        if ap.startswith("a") and h == 12:
-            h = 0
-        if 0 <= h <= 23 and 0 <= mn <= 59:
-            return f"{h:02d}:{mn:02d}"
-        return None
-
-    m2 = re.match(r"^(\d{1,2}):(\d{2})$", t)
-    if m2:
-        h = int(m2.group(1))
-        mn = int(m2.group(2))
-        if 0 <= h <= 23 and 0 <= mn <= 59:
-            return f"{h:02d}:{mn:02d}"
-
-    m3 = re.match(r"^(\d{1,2})$", t)
-    if m3:
-        h = int(m3.group(1))
-        if 0 <= h <= 23:
-            return f"{h:02d}:00"
-
-    return None
-
-
-def _parse_departure_constraint(raw: str | None) -> tuple[str | None, str | None]:
-    """Map a departure_time phrase to (sql-style operator, HH:MM string).
-
-    Examples:
-        "after 8pm"   -> (">=", "20:00")
-        "before 7am"  -> ("<=", "07:00")
-        "at 8:30am"   -> ("=",  "08:30")
-        "8pm"         -> ("=",  "20:00")
-        "20:00"       -> ("=",  "20:00")
-        "tomorrow"    -> (None, None)
-    """
-    if not raw:
-        return None, None
-    s = raw.strip().lower()
-
-    m = re.match(r"^\s*(after|from|>=)\s+(.+)$", s)
-    if m:
-        return ">=", _parse_clock_to_24h(m.group(2))
-
-    m = re.match(r"^\s*(before|until|<=)\s+(.+)$", s)
-    if m:
-        return "<=", _parse_clock_to_24h(m.group(2))
-
-    m = re.match(r"^\s*at\s+(.+)$", s)
-    if m:
-        return "=", _parse_clock_to_24h(m.group(1))
-
-    direct = _parse_clock_to_24h(s)
-    if direct:
-        return "=", direct
-    return None, None
-
-
-_FARE_BUDGET_RE = re.compile(
-    r"(?:max(?:imum)?|under|below|less\s+than|up\s*to|upto|<=|budget(?:\s+of)?)\s*"
-    r"(?:lkr|rs\.?|rupees?)?\s*(\d+(?:\.\d+)?)",
-    re.IGNORECASE,
-)
-
-
-def _parse_fare_intent(fare: str | None) -> dict[str, Any]:
-    """Classify the fare string into a structured intent.
-
-    Returns one of:
-        {"mode": "skip"}              -> fare = "no"; do not MATCH Fare, hide prices
-        {"mode": "any"}               -> include fare info, no filter, no ordering
-        {"mode": "cheapest"}          -> ORDER BY f.fare ASC
-        {"mode": "budget", "max": N}  -> WHERE f.fare <= N, ORDER BY f.fare ASC
-    """
-    f = (fare or "").strip().lower()
-    if not f or f in {"no", "false", "0", "skip", "none"}:
-        return {"mode": "skip"}
-
-    if "cheap" in f or "lowest" in f or "economy" in f:
-        return {"mode": "cheapest"}
-
-    m = _FARE_BUDGET_RE.search(f)
-    if m:
-        try:
-            return {"mode": "budget", "max": float(m.group(1))}
-        except ValueError:
-            pass
-
-    if f in {"any", "include_prices", "yes", "true", "1"}:
-        return {"mode": "any"}
-
-    return {"mode": "any"}
-
-
 def generate_cypher_for_transport(state: SmartMoveState) -> str:
-    """Deterministic fallback Cypher matching the real (:Place)-[:Schedule]->(:Place)
-    + (:Place)-[:Fare]->(:Place) graph.
-    """
-    origin = _title_case_place(state.get("origin")) or "Unknown"
-    destination = _title_case_place(state.get("destination")) or "Unknown"
-    transport = (state.get("transport_type") or "").strip().lower()
-    op, time_24 = _parse_departure_constraint(state.get("departure_time"))
-    fare_intent = _parse_fare_intent(state.get("fare"))
+    transport = state.get("transport_type") or "any"
+    origin = state.get("origin") or "<origin>"
+    destination = state.get("destination") or "<destination>"
+    departure = state.get("departure_time") or "<departure_time>"
+    fare = state.get("fare") or "<fare>"
 
-    lines: list[str] = [
-        f"MATCH (from:Place {{name: '{origin}'}})-[s:Schedule]->(to:Place {{name: '{destination}'}})",
-    ]
-
-    where_parts: list[str] = []
-    if op and time_24:
-        where_parts.append(f"s.departure {op} '{time_24}'")
-    if transport:
-        where_parts.append(
-            f"(toLower(coalesce(s.transport_type, s.service_type, '')) CONTAINS '{transport}')"
-        )
-    if where_parts:
-        lines.append("WHERE " + " AND ".join(where_parts))
-
-    return_cols = [
-        "from.name AS origin",
-        "to.name AS destination",
-        "s.departure AS departure_time",
-        "s.arrival AS arrival_time",
-    ]
-
-    if fare_intent["mode"] != "skip":
-        lines.append("MATCH (from)-[f:Fare]->(to)")
-        if fare_intent["mode"] == "budget":
-            lines.append(
-                f"WITH from, to, s, f WHERE f.fare <= {fare_intent['max']}"
-            )
-            lines.append("ORDER BY f.fare ASC")
-        elif fare_intent["mode"] == "cheapest":
-            lines.append("WITH from, to, s, f")
-            lines.append("ORDER BY f.fare ASC")
-        else:  # any / yes / include_prices
-            lines.append("WITH from, to, s, f")
-        return_cols.append("f.fare AS fare")
-    else:
-        lines.append("ORDER BY s.departure")
-
-    lines.append("RETURN " + ", ".join(return_cols))
-    lines.append("LIMIT 5")
-    return "\n".join(lines)
+    return (
+        "MATCH (o:Location {name: $origin})-[:CONNECTS]->(r:Route)-[:CONNECTS]->(d:Location {name: $destination}) "
+        "WHERE ($transport = 'any' OR r.transport_type = $transport) "
+        "RETURN o.name AS origin, d.name AS destination, r.transport_type AS transport_type, "
+        "$departure AS departure_time, r.duration AS duration, r.price AS price, "
+        "$fare AS fare_preference"
+    ).replace("$origin", f"'{origin}'").replace("$destination", f"'{destination}'").replace("$transport", f"'{transport}'").replace("$departure", f"'{departure}'").replace("$fare", f"'{fare}'")
 
 
-def _strip_cypher_fence(content: str) -> str:
-    text = (content or "").strip()
-    if text.startswith("```"):
-        lines = text.split("\n")
-        if lines and lines[0].startswith("```"):
-            lines = lines[1:]
-        if lines and lines[-1].strip().startswith("```"):
-            lines = lines[:-1]
-        text = "\n".join(lines).strip()
-    return text
-
-
-_CYPHER_SYSTEM_PROMPT = """You are a Neo4j Cypher expert for the SmartMove Sri Lankan transport graph.
-
-GRAPH SCHEMA (this is the ONLY schema — do not invent labels or relationships):
-
-  (:Place {name})
-      `name` is in Title Case, e.g. "Colombo", "Kandy", "Galle", "Negombo".
-
-  (:Place)-[:Schedule {
-      departure,                 // "HH:MM" 24-hour string, e.g. "06:15", "20:00"
-      arrival,                   // "HH:MM" 24-hour string
-      departure_from_terminal,   // optional, "HH:MM"
-      arrival_to_terminal,       // optional, "HH:MM"
-      route_type,                // optional, e.g. "Expressway", "Normal Route"
-      service_type,              // optional, e.g. "Luxury"
-      route_no                   // optional
-  }]->(:Place)
-
-  (:Place)-[:Fare {
-      fare,                      // numeric LKR
-      route_id                   // optional
-  }]->(:Place)
-
-REQUIRED PATTERN (follow this template exactly, dropping clauses that aren't applicable):
-
-  MATCH (from:Place {name: "<Title Case Origin>"})-[s:Schedule]->(to:Place {name: "<Title Case Destination>"})
-  [WHERE s.departure <op> "<HH:MM>"]                  // when departure_constraint provided
-  [MATCH (from)-[f:Fare]->(to)]                       // ONLY when fare mode != "skip"
-  [WITH from, to, s, f [WHERE f.fare <= <budget>]]    // ONLY when fare mode = "budget"
-  [ORDER BY f.fare ASC]                               // ONLY when fare mode in {cheapest, budget}
-  RETURN
-      from.name AS origin,
-      to.name AS destination,
-      s.departure AS departure_time,
-      s.arrival AS arrival_time
-      [, f.fare AS fare]                              // ONLY when fare is included
-  LIMIT 5
-
-NORMALIZATION RULES (already applied for you in `inputs`, but keep them in mind):
-  - Place names are pre-converted to Title Case.
-  - `departure_constraint` is given as {"op": ">="|"<="|"=", "time": "HH:MM"} or null.
-  - `fare_intent.mode` is one of: "skip" | "any" | "cheapest" | "budget".
-    - "skip" -> DO NOT MATCH Fare. DO NOT include f.fare in RETURN.
-    - "any" -> MATCH Fare, no filter, no ORDER BY f.fare. Include f.fare in RETURN.
-    - "cheapest" -> MATCH Fare, ORDER BY f.fare ASC. Include f.fare in RETURN.
-    - "budget" -> MATCH Fare, WHERE f.fare <= fare_intent.max, ORDER BY f.fare ASC. Include f.fare in RETURN.
-
-OUTPUT:
-- Return ONLY the Cypher query.
-- No markdown fences, no commentary, no parameters ($name).
-- Use single-line clauses separated by newlines.
-- Always end with `LIMIT 5`.
-"""
-
-
-_CYPHER_FEW_SHOT = """EXAMPLE
-inputs:
-{
-  "origin": "Colombo",
-  "destination": "Kandy",
-  "departure_constraint": {"op": ">=", "time": "20:00"},
-  "transport_type": null,
-  "fare_intent": {"mode": "cheapest"}
-}
-output:
-MATCH (from:Place {name: "Colombo"})-[s:Schedule]->(to:Place {name: "Kandy"})
-WHERE s.departure >= "20:00"
-MATCH (from)-[f:Fare]->(to)
-WITH from, to, s, f
-ORDER BY f.fare ASC
-RETURN from.name AS origin, to.name AS destination, s.departure AS departure_time, s.arrival AS arrival_time, f.fare AS fare
-LIMIT 5
-"""
-
-
-def cypher_generation_agent(state: SmartMoveState) -> SmartMoveState:
-    """LLM-generated Cypher tailored to the (:Place)-[:Schedule]->(:Place) graph."""
-    op, time_24 = _parse_departure_constraint(state.get("departure_time"))
-    fare_intent = _parse_fare_intent(state.get("fare"))
-
-    inputs: dict[str, Any] = {
-        "origin": _title_case_place(state.get("origin")) or None,
-        "destination": _title_case_place(state.get("destination")) or None,
-        "departure_constraint": (
-            {"op": op, "time": time_24} if op and time_24 else None
-        ),
-        "transport_type": state.get("transport_type"),
-        "fare_intent": fare_intent,
-    }
-
-    if not os.getenv("OPENAI_API_KEY"):
-        return {**state, "cypher_query": generate_cypher_for_transport(state)}
-
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", _CYPHER_SYSTEM_PROMPT + "\n" + _CYPHER_FEW_SHOT),
-            ("human", "inputs:\n{inputs_json}\noutput:"),
-        ]
+def execute_neo4j_safe(_: str) -> str:
+    return (
+        "MockResult: 2 routes found | "
+        "[{'origin': 'Colombo', 'destination': 'Kandy', 'transport_type': 'bus', 'duration': '3h', 'price': 'LKR 1200'}, "
+        "{'origin': 'Colombo', 'destination': 'Kandy', 'transport_type': 'train', 'duration': '2h 30m', 'price': 'LKR 1500'}]"
     )
-    try:
-        response = (prompt | get_llm()).invoke(
-            {"inputs_json": json.dumps(inputs, indent=2, default=str)}
-        ).content
-        cypher = _strip_cypher_fence(response)
-        if not cypher or "MATCH" not in cypher.upper():
-            cypher = generate_cypher_for_transport(state)
-    except Exception:
-        cypher = generate_cypher_for_transport(state)
-
-    return {**state, "cypher_query": cypher}
-
-
-# Backwards-compatible name for imports
-cypher_generator_node = cypher_generation_agent
-
-
-def _neo4j_config() -> tuple[str, str, str, str]:
-    """Read Aura / local Neo4j settings from environment (see .env NEO4J_*)."""
-
-    def _v(key: str, default: str = "") -> str:
-        raw = os.getenv(key, default) or ""
-        return raw.strip().strip('"').strip("'")
-
-    uri = _v("NEO4J_URI")
-    user = _v("NEO4J_USER", "neo4j") or "neo4j"
-    password = _v("NEO4J_PASSWORD")
-    database = _v("NEO4J_DATABASE", "neo4j") or "neo4j"
-    return uri, user, password, database
-
-
-def execute_neo4j_query(cypher: str) -> str:
-    """Run Cypher against Neo4j (Aura) using NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD."""
-    q = (cypher or "").strip()
-    if not q:
-        return "No Cypher query to run."
-
-    uri, user, password, database = _neo4j_config()
-    if not uri or not password:
-        return (
-            "Neo4j not configured: set NEO4J_URI and NEO4J_PASSWORD in your environment "
-            "(e.g. .env at the SmartMove repo root)."
-        )
-
-    driver = GraphDatabase.driver(uri, auth=(user, password))
-    try:
-        with driver.session(database=database) as session:
-            result = session.run(q)
-            rows = [r.data() for r in result]
-    except Exception as e:
-        return f"Neo4j query error: {e}"
-    finally:
-        driver.close()
-
-    if not rows:
-        return "[]"
-    return json.dumps(rows, ensure_ascii=False, default=str)
-
-
-def execute_neo4j_safe(cypher: str) -> str:
-    """Alias for backwards compatibility."""
-    return execute_neo4j_query(cypher)
 
 
 def intent_detection_node(state: SmartMoveState) -> SmartMoveState:
@@ -1133,8 +804,12 @@ def follow_up_question_node(state: SmartMoveState) -> SmartMoveState:
     return {**state, **updates, "follow_up_question": response, "response": response, "messages": messages}
 
 
+def cypher_generator_node(state: SmartMoveState) -> SmartMoveState:
+    return {**state, "cypher_query": generate_cypher_for_transport(state)}
+
+
 def neo4j_query_node(state: SmartMoveState) -> SmartMoveState:
-    return {**state, "result": execute_neo4j_query(state.get("cypher_query") or "")}
+    return {**state, "result": execute_neo4j_safe(state.get("cypher_query") or "")}
 
 
 def response_formatter_node(state: SmartMoveState) -> SmartMoveState:
@@ -1150,10 +825,7 @@ def response_formatter_node(state: SmartMoveState) -> SmartMoveState:
                 "system",
                 "You are SmartMove response formatter.\n"
                 "Create a concise transportation-focused answer from the result.\n"
-                "Respect the user's fare preference:\n"
-                "- A specific value like 'cheapest', 'max LKR X', or a budget range — compare options accordingly.\n"
-                "- 'yes' or 'include_prices' — include fare/price information for each option.\n"
-                "- 'no' — the user opted out of fare info; DO NOT mention prices, fares, or costs.\n"
+                "Respect the user's fare preference when comparing options (cheapest, max budget, include prices).\n"
                 "No filler text.\n"
                 f"Respond in {lang_name}.",
             ),
@@ -1182,7 +854,7 @@ def build_app():
     graph.add_node("merge_state", merge_state_node)
     graph.add_node("missing_info_validator", missing_info_validator_node)
     graph.add_node("follow_up_question", follow_up_question_node)
-    graph.add_node("cypher_generator", cypher_generation_agent)
+    graph.add_node("cypher_generator", cypher_generator_node)
     graph.add_node("neo4j_query", neo4j_query_node)
     graph.add_node("response_formatter", response_formatter_node)
 
